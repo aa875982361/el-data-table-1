@@ -479,6 +479,16 @@ export default {
       }
     },
     /**
+     * 操作成功提示语 接受一个参数 代表是新增 还是修改 还是其他操作
+     * @param type number
+     */
+    successMessage: {
+      type: Function,
+      default(){
+        return '操作成功'
+      }
+    },
+    /**
      * 某行数据是否可以删除, 返回true表示可以, 控制的是单选时单行的删除按钮
      */
     canDelete: {
@@ -1056,7 +1066,7 @@ export default {
           await this.$axios[method](url, data, this.axiosConfig)
         }
         this.getList()
-        this.showMessage(true)
+        this.showMessage(true, +isNew)
         done()
       } catch (e) {
         // 出错则不关闭dialog
@@ -1166,11 +1176,11 @@ export default {
       //      return index ===0 && record.children && record.children.length > 0;
       return record[this.treeChildKey] && record[this.treeChildKey].length > 0
     },
-    showMessage(isSuccess = true) {
+    showMessage(isSuccess = true, isNew = -1) {
       if (isSuccess) {
         this.$message({
           type: 'success',
-          message: '操作成功'
+          message: this.successMessage(isNew)
         })
       } else {
         this.$message({
